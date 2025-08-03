@@ -184,5 +184,15 @@ namespace lists
 
             return false;
         }
-    };
+
+        size_t size() const {
+            auto current = rootPtr.get();
+            size_t size = 1;
+            while(current->sharedNext.get() != rootPtr.get()) {
+                size++;
+                current = current->sharedNext.get();
+            }
+            return size;
+        }
+    }; 
 }

@@ -88,7 +88,7 @@ namespace lists
             auto current = rootPtr.get();
             while (current && current->next)
             {
-                auto ptr = current->next->get_data_ptr();
+                auto ptr = current->next->get_data_ptr<T>();
                 if (ptr && *ptr == val)
                 {
                     current->next = std::move(current->next->next);
@@ -140,6 +140,17 @@ namespace lists
                 current = current->next.get();
             }
             return false;
+        }
+
+        size_t size() const {
+            auto current = rootPtr.get();
+            size_t size = 1;
+            while(current->next) {
+                size++;
+                current = current->next.get();
+            }
+
+            return size;
         }
     };
 }
