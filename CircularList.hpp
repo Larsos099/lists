@@ -58,6 +58,59 @@ namespace lists
         }
 
     public:
+        class Iterator
+        {
+        private:
+            Node *current;
+            Node *root;
+            bool done = false;
+
+        public:
+            Iterator(Node *current, Node *root, bool is_end = false)
+                : current(current), root(root), done(is_end || !current) {}
+
+            Node &operator*() const
+            {
+                return *current;
+            }
+
+            Iterator &operator++()
+            {
+                if (!current || done)
+                    return *this;
+
+                current = current->sharedNext.get();
+                if (current == root)
+                {
+                    done = true;
+                }
+
+                return *this;
+            }
+
+            bool operator!=(const Iterator &other) const
+            {
+                return !(done && other.done);
+            }
+        };
+        Iterator begin()
+        {
+            return Iterator(rootPtr.get(), rootPtr.get(), false);
+        }
+
+        Iterator end()
+        {
+            return Iterator(nullptr, rootPtr.get(), true);
+        }
+        Iterator begin() const
+        {
+            return Iterator(rootPtr.get(), rootPtr.get(), false);
+        }
+
+        Iterator end() const
+        {
+            return Iterator(nullptr, rootPtr.get(), true);
+        }
         CircularLinkedList() = default;
         ~CircularLinkedList() = default;
 
@@ -185,14 +238,20 @@ namespace lists
             return false;
         }
 
-        size_t size() const {
+        [[nodiscard]] size_t size() const
+        {
+            if (!rootPtr)
+            {
+                return 0;
+            }
             auto current = rootPtr.get();
             size_t size = 1;
-            while(current->sharedNext.get() != rootPtr.get()) {
+            while (current->sharedNext.get() != rootPtr.get())
+            {
                 size++;
                 current = current->sharedNext.get();
             }
             return size;
         }
-    }; 
+    };
 }

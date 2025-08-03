@@ -46,6 +46,55 @@ namespace lists
         }
 
     public:
+        class Iterator
+        {
+        private:
+            Node *ptr;
+
+        public:
+            Iterator(Node *p) : ptr(p) {}
+
+            Node &operator*() const
+            {
+                return *ptr;
+            }
+
+            Iterator &operator++()
+            {
+                if (ptr)
+                    ptr = ptr->next.get();
+                return *this;
+            }
+
+            bool operator!=(const Iterator &other) const
+            {
+                return ptr != other.ptr;
+            }
+
+            bool operator==(const Iterator &other) const
+            {
+                return ptr == other.ptr;
+            }
+        };
+
+        Iterator begin()
+        {
+            return Iterator(rootPtr.get());
+        }
+
+        Iterator end()
+        {
+            return Iterator(nullptr);
+        }
+        Iterator begin() const
+        {
+            return Iterator(rootPtr.get());
+        }
+
+        Iterator end() const
+        {
+            return Iterator(nullptr);
+        }
         LinkedList() = default;
         ~LinkedList() = default;
 
@@ -72,7 +121,8 @@ namespace lists
                 i++;
             }
 
-            if (i != idx) throw std::out_of_range("Index out of range.");
+            if (i != idx)
+                throw std::out_of_range("Index out of range.");
 
             return current->get_data<T>();
         }
@@ -142,10 +192,15 @@ namespace lists
             return false;
         }
 
-        size_t size() const {
+        [[nodiscard]] size_t size() const
+        {
+            if(!rootPtr) {
+                return 0;
+            }
             auto current = rootPtr.get();
             size_t size = 1;
-            while(current->next) {
+            while (current->next)
+            {
                 size++;
                 current = current->next.get();
             }

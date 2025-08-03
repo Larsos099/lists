@@ -21,7 +21,7 @@ int main(int argc, char** argv) {
     list.push_front(6);
     int a = list.get_by_index(0);
     int b = list.get_by_index(1);
-    std::cout << << "first: " << a << std::endl << "second: " << b << std::endl;
+    std::cout << "first: " << a << std::endl << "second: " << b << std::endl;
     return 0;
 }
 ```
